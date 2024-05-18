@@ -1,0 +1,182 @@
+Random seed set as 42
+Loading data and creating tokenizer ...
+Vocabulary size:  5755
+Sanity Check ...
+
+
+
+----part 3.1----
+
+==== simple tokenizer ====
+
+	 CLS Part
+using [simple] tokenizer, [cls] embedding, [sin] position embedding
+Start Training CLS using cuda device
+epoch: 0 , global step:    0, running_loss: 0.0000, accuracy: 33.0667
+epoch: 1 , global step:  131, running_loss: 1.1014, accuracy: 44.9333
+epoch: 2 , global step:  262, running_loss: 0.9830, accuracy: 51.4667
+epoch: 3 , global step:  393, running_loss: 0.8405, accuracy: 63.3333
+epoch: 4 , global step:  524, running_loss: 0.6733, accuracy: 73.8667
+epoch: 5 , global step:  655, running_loss: 0.4453, accuracy: 78.4000
+epoch: 6 , global step:  786, running_loss: 0.2499, accuracy: 85.0667
+epoch: 7 , global step:  917, running_loss: 0.1452, accuracy: 85.3333
+epoch: 8 , global step: 1048, running_loss: 0.0887, accuracy: 86.4000
+epoch: 9 , global step: 1179, running_loss: 0.0348, accuracy: 87.2000
+epoch: 10, global step: 1310, running_loss: 0.0668, accuracy: 86.6667
+epoch: 11, global step: 1441, running_loss: 0.0745, accuracy: 86.0000
+epoch: 12, global step: 1572, running_loss: 0.0359, accuracy: 86.6667
+epoch: 13, global step: 1703, running_loss: 0.0178, accuracy: 85.4667
+epoch: 14, global step: 1834, running_loss: 0.0290, accuracy: 86.1333
+epoch: 15, global step: 1965, running_loss: 0.0183, accuracy: 87.0667
+using [simple] tokenizer, [avg] embedding, [sin] position embedding
+Start Training CLS using cuda device
+epoch: 0 , global step:    0, running_loss: 0.0000, accuracy: 33.0667
+epoch: 1 , global step:  131, running_loss: 1.1045, accuracy: 40.6667
+epoch: 2 , global step:  262, running_loss: 0.9871, accuracy: 55.8667
+epoch: 3 , global step:  393, running_loss: 0.8985, accuracy: 57.0667
+epoch: 4 , global step:  524, running_loss: 0.7312, accuracy: 71.4667
+epoch: 5 , global step:  655, running_loss: 0.4897, accuracy: 79.2000
+epoch: 6 , global step:  786, running_loss: 0.2783, accuracy: 81.6000
+epoch: 7 , global step:  917, running_loss: 0.1347, accuracy: 86.2667
+epoch: 8 , global step: 1048, running_loss: 0.0863, accuracy: 85.6000
+epoch: 9 , global step: 1179, running_loss: 0.0633, accuracy: 86.0000
+epoch: 10, global step: 1310, running_loss: 0.0349, accuracy: 86.6667
+epoch: 11, global step: 1441, running_loss: 0.0779, accuracy: 86.4000
+epoch: 12, global step: 1572, running_loss: 0.0536, accuracy: 86.1333
+epoch: 13, global step: 1703, running_loss: 0.0504, accuracy: 86.5333
+epoch: 14, global step: 1834, running_loss: 0.0248, accuracy: 87.7333
+epoch: 15, global step: 1965, running_loss: 0.0276, accuracy: 87.4667
+
+	 LM Part
+using [simple] tokenizer, [abs] position embedding
+Using abs position embedding...
+Step: 100, running_loss: 6.9138, Perplexity: {'Train': 574.4426, 'wbush': 774.1793, 'hbush': 702.4549, 'obama': 678.3403}
+Step: 200, running_loss: 3.1122, Perplexity: {'Train': 431.7817, 'wbush': 648.434, 'hbush': 582.8425, 'obama': 558.428}
+Step: 300, running_loss: 1.9770, Perplexity: {'Train': 312.8462, 'wbush': 545.0529, 'hbush': 485.3717, 'obama': 453.1272}
+Step: 400, running_loss: 1.4103, Perplexity: {'Train': 241.1487, 'wbush': 487.2621, 'hbush': 432.2691, 'obama': 396.219}
+Step: 500, running_loss: 1.0793, Perplexity: {'Train': 192.8367, 'wbush': 454.1135, 'hbush': 397.7458, 'obama': 354.7654}
+using [simple] tokenizer, [sin] position embedding
+Using sin position embedding...
+Step: 100, running_loss: 6.9134, Perplexity: {'Train': 553.3749, 'wbush': 751.6366, 'hbush': 680.8491, 'obama': 658.2972}
+Step: 200, running_loss: 3.0649, Perplexity: {'Train': 367.7069, 'wbush': 577.584, 'hbush': 516.1695, 'obama': 489.6537}
+Step: 300, running_loss: 1.9231, Perplexity: {'Train': 262.091, 'wbush': 493.162, 'hbush': 435.1994, 'obama': 403.9738}
+Step: 400, running_loss: 1.3787, Perplexity: {'Train': 202.369, 'wbush': 451.3442, 'hbush': 391.4598, 'obama': 356.9438}
+Step: 500, running_loss: 1.0574, Perplexity: {'Train': 162.2642, 'wbush': 429.2905, 'hbush': 368.4488, 'obama': 329.2115}
+
+==== pretrained tokenizer ====
+
+	 CLS Part
+using [pretrained] tokenizer, [cls] embedding, [sin] position embedding
+Start Training CLS using cuda device
+epoch: 0 , global step:    0, running_loss: 0.0000, accuracy: 33.3333
+epoch: 1 , global step:  131, running_loss: 1.0894, accuracy: 48.1333
+epoch: 2 , global step:  262, running_loss: 0.9904, accuracy: 56.6667
+epoch: 3 , global step:  393, running_loss: 0.8889, accuracy: 49.0667
+epoch: 4 , global step:  524, running_loss: 0.7395, accuracy: 71.3333
+epoch: 5 , global step:  655, running_loss: 0.5403, accuracy: 77.7333
+epoch: 6 , global step:  786, running_loss: 0.3628, accuracy: 84.5333
+epoch: 7 , global step:  917, running_loss: 0.2286, accuracy: 80.5333
+epoch: 8 , global step: 1048, running_loss: 0.1523, accuracy: 84.4000
+epoch: 9 , global step: 1179, running_loss: 0.1108, accuracy: 87.7333
+epoch: 10, global step: 1310, running_loss: 0.0476, accuracy: 86.8000
+epoch: 11, global step: 1441, running_loss: 0.0808, accuracy: 88.0000
+epoch: 12, global step: 1572, running_loss: 0.0871, accuracy: 86.8000
+epoch: 13, global step: 1703, running_loss: 0.0449, accuracy: 87.6000
+epoch: 14, global step: 1834, running_loss: 0.0636, accuracy: 86.2667
+epoch: 15, global step: 1965, running_loss: 0.0549, accuracy: 87.7333
+using [pretrained] tokenizer, [avg] embedding, [sin] position embedding
+Start Training CLS using cuda device
+epoch: 0 , global step:    0, running_loss: 0.0000, accuracy: 35.0667
+epoch: 1 , global step:  131, running_loss: 1.0763, accuracy: 43.2000
+epoch: 2 , global step:  262, running_loss: 0.9763, accuracy: 54.1333
+epoch: 3 , global step:  393, running_loss: 0.8489, accuracy: 60.1333
+epoch: 4 , global step:  524, running_loss: 0.6435, accuracy: 73.0667
+epoch: 5 , global step:  655, running_loss: 0.4601, accuracy: 79.0667
+epoch: 6 , global step:  786, running_loss: 0.3038, accuracy: 83.4667
+epoch: 7 , global step:  917, running_loss: 0.1980, accuracy: 86.2667
+epoch: 8 , global step: 1048, running_loss: 0.1159, accuracy: 84.1333
+epoch: 9 , global step: 1179, running_loss: 0.1192, accuracy: 85.8667
+epoch: 10, global step: 1310, running_loss: 0.0612, accuracy: 86.2667
+epoch: 11, global step: 1441, running_loss: 0.0929, accuracy: 87.0667
+epoch: 12, global step: 1572, running_loss: 0.0595, accuracy: 86.4000
+epoch: 13, global step: 1703, running_loss: 0.0545, accuracy: 86.6667
+epoch: 14, global step: 1834, running_loss: 0.0651, accuracy: 86.9333
+epoch: 15, global step: 1965, running_loss: 0.0829, accuracy: 87.0667
+
+	 LM Part
+using [pretrained] tokenizer, [abs] position embedding
+Using abs position embedding...
+Step: 100, running_loss: 7.4707, Perplexity: {'Train': 580.1411, 'wbush': 856.4706, 'hbush': 761.7302, 'obama': 734.0677}
+Step: 200, running_loss: 3.1349, Perplexity: {'Train': 449.7853, 'wbush': 754.8339, 'hbush': 647.861, 'obama': 615.2795}
+Step: 300, running_loss: 1.9982, Perplexity: {'Train': 335.6195, 'wbush': 630.6179, 'hbush': 530.1306, 'obama': 506.486}
+Step: 400, running_loss: 1.4292, Perplexity: {'Train': 261.1994, 'wbush': 552.3895, 'hbush': 467.8022, 'obama': 437.114}
+Step: 500, running_loss: 1.1000, Perplexity: {'Train': 211.9178, 'wbush': 507.3663, 'hbush': 430.2992, 'obama': 397.7944}
+using [pretrained] tokenizer, [sin] position embedding
+Using sin position embedding...
+Step: 100, running_loss: 7.5098, Perplexity: {'Train': 575.7834, 'wbush': 873.72, 'hbush': 752.3416, 'obama': 727.2121}
+Step: 200, running_loss: 3.1113, Perplexity: {'Train': 412.6687, 'wbush': 709.0542, 'hbush': 598.074, 'obama': 569.9337}
+Step: 300, running_loss: 1.9744, Perplexity: {'Train': 306.8001, 'wbush': 584.3341, 'hbush': 490.6339, 'obama': 469.7397}
+Step: 400, running_loss: 1.4148, Perplexity: {'Train': 237.5478, 'wbush': 518.6463, 'hbush': 435.0734, 'obama': 404.5831}
+Step: 500, running_loss: 1.0875, Perplexity: {'Train': 194.0757, 'wbush': 478.6303, 'hbush': 401.0491, 'obama': 367.9153}
+
+
+
+----part 3.2----
+====CLS==== using [pretrained] tokenizer, [avg] embedding, [sin] position embedding, MoE model
+using MoE
+using MoE
+using MoE
+using MoE
+Start Training CLS using cuda device
+epoch: 0 , global step:    0, running_loss: 0.0000, accuracy: 33.3333
+epoch: 1 , global step:  131, running_loss: 1.0744, accuracy: 41.3333
+epoch: 2 , global step:  262, running_loss: 1.0010, accuracy: 54.8000
+epoch: 3 , global step:  393, running_loss: 0.8802, accuracy: 64.5333
+epoch: 4 , global step:  524, running_loss: 0.7347, accuracy: 72.2667
+epoch: 5 , global step:  655, running_loss: 0.5839, accuracy: 74.4000
+epoch: 6 , global step:  786, running_loss: 0.4302, accuracy: 80.1333
+epoch: 7 , global step:  917, running_loss: 0.2827, accuracy: 82.0000
+epoch: 8 , global step: 1048, running_loss: 0.1817, accuracy: 84.9333
+epoch: 9 , global step: 1179, running_loss: 0.1288, accuracy: 83.0667
+epoch: 10, global step: 1310, running_loss: 0.1255, accuracy: 83.7333
+epoch: 11, global step: 1441, running_loss: 0.1052, accuracy: 86.9333
+epoch: 12, global step: 1572, running_loss: 0.0443, accuracy: 86.5333
+epoch: 13, global step: 1703, running_loss: 0.0578, accuracy: 86.0000
+epoch: 14, global step: 1834, running_loss: 0.0455, accuracy: 86.2667
+epoch: 15, global step: 1965, running_loss: 0.0173, accuracy: 87.0667
+epoch: 16, global step: 2096, running_loss: 0.0123, accuracy: 86.4000
+epoch: 17, global step: 2227, running_loss: 0.0707, accuracy: 85.2000
+epoch: 18, global step: 2358, running_loss: 0.0309, accuracy: 86.0000
+epoch: 19, global step: 2489, running_loss: 0.0285, accuracy: 85.7333
+epoch: 20, global step: 2620, running_loss: 0.0481, accuracy: 86.5333
+epoch: 21, global step: 2751, running_loss: 0.0402, accuracy: 83.8667
+epoch: 22, global step: 2882, running_loss: 0.0854, accuracy: 85.8667
+epoch: 23, global step: 3013, running_loss: 0.0171, accuracy: 86.6667
+epoch: 24, global step: 3144, running_loss: 0.0130, accuracy: 87.2000
+epoch: 25, global step: 3275, running_loss: 0.0107, accuracy: 86.5333
+epoch: 26, global step: 3406, running_loss: 0.0169, accuracy: 83.4667
+epoch: 27, global step: 3537, running_loss: 0.0163, accuracy: 85.8667
+epoch: 28, global step: 3668, running_loss: 0.0814, accuracy: 86.8000
+epoch: 29, global step: 3799, running_loss: 0.0572, accuracy: 85.4667
+epoch: 30, global step: 3930, running_loss: 0.0247, accuracy: 87.0667
+epoch: 31, global step: 4061, running_loss: 0.0156, accuracy: 85.8667
+epoch: 32, global step: 4192, running_loss: 0.0289, accuracy: 86.6667
+epoch: 33, global step: 4323, running_loss: 0.0923, accuracy: 85.4667
+epoch: 34, global step: 4454, running_loss: 0.0444, accuracy: 87.0667
+epoch: 35, global step: 4585, running_loss: 0.0097, accuracy: 88.0000
+====LM====using [pretrained] tokenizer, [abs] position embedding, MoE model
+Using abs position embedding...
+using MoE
+using MoE
+using MoE
+using MoE
+Step: 100, running_loss: 7.5501, Perplexity: {'Train': 582.8398, 'wbush': 876.9531, 'hbush': 766.2431, 'obama': 745.6387}
+Step: 200, running_loss: 3.1359, Perplexity: {'Train': 457.7014, 'wbush': 771.1129, 'hbush': 650.2934, 'obama': 635.2809}
+Step: 300, running_loss: 1.9973, Perplexity: {'Train': 338.3113, 'wbush': 649.2997, 'hbush': 529.9746, 'obama': 511.8355}
+Step: 400, running_loss: 1.4251, Perplexity: {'Train': 264.3258, 'wbush': 567.0856, 'hbush': 465.506, 'obama': 436.3491}
+Step: 500, running_loss: 1.0983, Perplexity: {'Train': 211.1569, 'wbush': 519.8073, 'hbush': 429.7404, 'obama': 390.8648}
+Step: 600, running_loss: 0.8831, Perplexity: {'Train': 173.3637, 'wbush': 485.8698, 'hbush': 396.318, 'obama': 362.0396}
+Step: 700, running_loss: 0.7301, Perplexity: {'Train': 146.1351, 'wbush': 469.3622, 'hbush': 382.0483, 'obama': 339.3144}
+Step: 800, running_loss: 0.6201, Perplexity: {'Train': 125.2297, 'wbush': 458.2617, 'hbush': 370.0235, 'obama': 331.1274}
+Step: 900, running_loss: 0.5356, Perplexity: {'Train': 107.988, 'wbush': 449.0725, 'hbush': 364.4232, 'obama': 320.4824}
+Step: 1000, running_loss: 0.4685, Perplexity: {'Train': 94.3028, 'wbush': 445.1015, 'hbush': 360.1626, 'obama': 315.8025}

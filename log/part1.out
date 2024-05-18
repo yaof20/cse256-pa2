@@ -1,0 +1,46 @@
+Random seed set as 42
+Loading data and creating tokenizer ...
+Vocabulary size:  5755
+Sanity Check ...
+Input sentence:  It is costly and politically difficult to continue this conflict.
+Input tensor shape:  torch.Size([1, 32])
+Number of attention maps:  8
+Total number of parameters: 488784
+
+Training CLS - embedding: avg...
+Start Training CLS using cuda device
+epoch: 0 , global step:    0, running_loss: 0.0000, accuracy: 33.3333
+epoch: 1 , global step:  131, running_loss: 1.0895, accuracy: 38.0000
+epoch: 2 , global step:  262, running_loss: 1.0216, accuracy: 54.4000
+epoch: 3 , global step:  393, running_loss: 0.9186, accuracy: 58.5333
+epoch: 4 , global step:  524, running_loss: 0.8013, accuracy: 64.6667
+epoch: 5 , global step:  655, running_loss: 0.6310, accuracy: 75.2000
+epoch: 6 , global step:  786, running_loss: 0.4541, accuracy: 80.0000
+epoch: 7 , global step:  917, running_loss: 0.3294, accuracy: 75.7333
+epoch: 8 , global step: 1048, running_loss: 0.2108, accuracy: 85.0667
+epoch: 9 , global step: 1179, running_loss: 0.1156, accuracy: 88.6667
+epoch: 10, global step: 1310, running_loss: 0.0938, accuracy: 87.2000
+epoch: 11, global step: 1441, running_loss: 0.0687, accuracy: 88.4000
+epoch: 12, global step: 1572, running_loss: 0.0524, accuracy: 88.2667
+epoch: 13, global step: 1703, running_loss: 0.0226, accuracy: 88.4000
+epoch: 14, global step: 1834, running_loss: 0.0094, accuracy: 87.7333
+epoch: 15, global step: 1965, running_loss: 0.0229, accuracy: 87.0667
+
+Training CLS - embedding: cls...
+Start Training CLS using cuda device
+epoch: 0 , global step:    0, running_loss: 0.0000, accuracy: 33.6000
+epoch: 1 , global step:  131, running_loss: 1.0998, accuracy: 38.1333
+epoch: 2 , global step:  262, running_loss: 1.0005, accuracy: 42.1333
+epoch: 3 , global step:  393, running_loss: 0.9068, accuracy: 60.6667
+epoch: 4 , global step:  524, running_loss: 0.7601, accuracy: 62.2667
+epoch: 5 , global step:  655, running_loss: 0.5493, accuracy: 78.2667
+epoch: 6 , global step:  786, running_loss: 0.3277, accuracy: 79.8667
+epoch: 7 , global step:  917, running_loss: 0.1980, accuracy: 82.0000
+epoch: 8 , global step: 1048, running_loss: 0.1084, accuracy: 84.6667
+epoch: 9 , global step: 1179, running_loss: 0.0610, accuracy: 85.3333
+epoch: 10, global step: 1310, running_loss: 0.0512, accuracy: 84.8000
+epoch: 11, global step: 1441, running_loss: 0.0661, accuracy: 83.2000
+epoch: 12, global step: 1572, running_loss: 0.0700, accuracy: 84.2667
+epoch: 13, global step: 1703, running_loss: 0.0265, accuracy: 85.6000
+epoch: 14, global step: 1834, running_loss: 0.0163, accuracy: 84.8000
+epoch: 15, global step: 1965, running_loss: 0.0591, accuracy: 84.5333

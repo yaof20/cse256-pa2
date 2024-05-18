@@ -23,6 +23,9 @@ class Utilities:
             _, attn_maps = self.model(input_tensor)
         print("Number of attention maps: ", len(attn_maps))
 
+        total_params = sum(p.numel() for p in self.model.parameters())
+        print(f"Total number of parameters: {total_params}")
+
         os.makedirs('./attn_maps', exist_ok=True)
         for j, attn_map in enumerate(attn_maps):
             attn_map = attn_map.squeeze(0).detach().cpu().numpy()

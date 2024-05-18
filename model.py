@@ -1,6 +1,9 @@
+import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.autograd import Variable
+
 
 
 class BatchNorm(nn.Module):
@@ -46,6 +49,8 @@ class LayerNorm(nn.Module):
         xvar = x.var(-1, keepdim=True)
 
         out = (x - xmean) / torch.sqrt(xvar + self.eps)
+        self.gamma = self.gamma.to(x.device)
+        self.beta = self.beta.to(x.device)
         out = self.gamma * out + self.beta
 
         return out
@@ -111,11 +116,86 @@ class FFN(nn.Module):
         return x
 
 
+class Expert(nn.Module):
+    def __init__(self, d_model, hidden_size, dropout_rate=0.1):
+        super().__init__()
+        self.linear1 = nn.Linear(d_model, hidden_size)
+        self.linear2 = nn.Linear(hidden_size, d_model)
+        self.activation = nn.ReLU()
+        self.droput = nn.Dropout(dropout_rate)
+    
+    def forward(self, x):
+        x = self.linear1(x)
+        x = self.activation(x) 
+        x = self.linear2(x)
+        x = self.droput(x)
+
+        return x
+
+
+class NoisyTopkRouter(nn.Module):
+    def __init__(self, d_model, num_experts, top_k):
+        super().__init__()
+        self.top_k = top_k
+        self.topkrouter = nn.Linear(d_model, num_experts)
+        self.noise_linear =nn.Linear(d_model, num_experts)
+    
+    def forward(self, mh_output):
+        logits = self.topkrouter(mh_output)
+        noise_logits = self.noise_linear(mh_output)
+
+        noise = torch.randn_like(logits) * F.softplus(noise_logits)
+        noisy_logits = logits + noise
+
+        top_k_logits, indices = noisy_logits.topk(self.top_k, dim=-1)
+        zeros = torch.full_like(noisy_logits, float('-inf'))
+        sparse_logits = zeros.scatter(-1, indices, top_k_logits)
+        router_output = F.softmax(sparse_logits, dim=-1)
+        return router_output, indices
+
+
+class MoE(nn.Module):
+    def __init__(self, d_model, hidden_size, num_experts, top_k):
+        super().__init__()
+        self.router = NoisyTopkRouter(d_model, num_experts, top_k)
+        self.experts = nn.ModuleList([Expert(d_model, hidden_size) for _ in range(num_experts)])
+        self.top_k = top_k
+    
+    def forward(self, x):
+        gating_output, indices = self.router(x)
+        output = torch.zeros_like(x)
+
+        flat_x = x.view(-1, x.size(-1))
+        flat_gating_output = gating_output.view(-1, gating_output.size(-1))
+
+        for i, expert in enumerate(self.experts):
+            expert_mask = (indices == i).any(dim=-1)
+            flat_mask = expert_mask.view(-1)
+
+            if flat_mask.any():
+                expert_input = flat_x[flat_mask]
+                expert_output = expert(expert_input)
+
+                # Extract and apply gating scores
+                gating_scores = flat_gating_output[flat_mask, i].unsqueeze(1)
+                weighted_output = expert_output * gating_scores
+
+                # Update final output additively by indexing and adding
+                output[expert_mask] += weighted_output.squeeze(1)
+
+        return output
+
+
 class Block(nn.Module):
-    def __init__(self, d_model, hidden_size, block_size, head_num, dropout_rate=0.1, is_causal=True):
+    def __init__(self, d_model, hidden_size, block_size, head_num, dropout_rate=0.1, is_causal=True, is_moe=False):
         super().__init__()
         self.sa = MultiHeadAttention(d_model, block_size, head_num, dropout_rate, is_causal)
-        self.ffn = FFN(d_model, hidden_size, dropout_rate)
+        self.is_moe = is_moe
+        if not self.is_moe:
+            self.ffn = FFN(d_model, hidden_size, dropout_rate)
+        else:
+            self.ffn = MoE(d_model, hidden_size, num_experts=4, top_k=2)
+            print('using MoE')
         self.ln1 = LayerNorm(d_model)
         self.ln2 = LayerNorm(d_model)
     
@@ -128,23 +208,57 @@ class Block(nn.Module):
         return x, attn_maps
 
 
+class SinusoidalPosisition(nn.Module):
+    def __init__(self, d_model, dropout_rate, max_len=5000):
+        super().__init__()
+        self.dropout = nn.Dropout(dropout_rate)
+
+        pos_embedding = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len).unsqueeze(1)  # (max_len, 1)
+
+        div_term = torch.exp(-torch.arange(0, d_model, 2) / d_model * math.log(10000.0))
+
+        pos_embedding[:, 0::2] = torch.sin(position * div_term)
+        pos_embedding[:, 1::2] = torch.cos(position * div_term)
+
+        self.register_buffer('pos_embedding', pos_embedding.unsqueeze(0))
+    
+    def forward(self, tok_embedding):
+        seq_len = tok_embedding.size(1)
+        tok_embedding = tok_embedding + Variable(self.pos_embedding[:, :seq_len].to(tok_embedding.device), requires_grad=False)
+        return self.dropout(tok_embedding)
+
+
 class Encoder(nn.Module):
-    def __init__(self, vocab_size, d_model, hidden_size, block_size, head_num, layer_num, dropout_rate=0.1):
+    def __init__(self, vocab_size, d_model, hidden_size, block_size, head_num, layer_num, dropout_rate=0.1, pos_emb_method='abs', is_moe=False):
         super().__init__()
         self.is_causal = False
         self.tok_embedding = nn.Embedding(vocab_size, d_model)
-        self.pos_embedding = nn.Embedding(block_size, d_model)
-        self.blocks = nn.ModuleList([Block(d_model, hidden_size, block_size, head_num, dropout_rate, is_causal=self.is_causal) for _ in range(layer_num)])
+        self.pos_emb_method = pos_emb_method
+        if self.pos_emb_method == 'abs':
+            self.pos_embedding = nn.Embedding(block_size, d_model)
+        elif self.pos_emb_method == 'sin':
+            self.pos_embedding = SinusoidalPosisition(d_model, dropout_rate)
+        self.blocks = nn.ModuleList([Block(d_model, hidden_size, block_size, head_num, dropout_rate, is_causal=self.is_causal, is_moe=is_moe) for _ in range(layer_num)])
 
         self.ln_f = LayerNorm(d_model)
+        
 
     
     def forward(self, input_ids, label_ids=None):
         batch_size, seq_len = input_ids.shape
 
         tok_emb = self.tok_embedding(input_ids)
-        pos_emb = self.pos_embedding(torch.arange(seq_len))
-        x = tok_emb + pos_emb
+
+        if self.pos_emb_method == 'abs':
+            pos_emb = self.pos_embedding(torch.arange(seq_len).to(input_ids.device))
+            x = tok_emb + pos_emb
+        elif self.pos_emb_method == 'sin':
+            x = self.pos_embedding(tok_emb)
+        elif self.pos_emb_method == 'rope':
+            pass
+        else:
+            raise ValueError(f"Unexpected pos_emb_method {self.pos_emb_method}")
 
         attn_maps = []
         for block in self.blocks:
@@ -155,12 +269,17 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
-    def __init__(self, vocab_size, d_model, hidden_size, block_size, head_num, layer_num, dropout_rate=0.1):
+    def __init__(self, vocab_size, d_model, hidden_size, block_size, head_num, layer_num, dropout_rate=0.1, pos_emb_method='abs', is_moe=False):
         super().__init__()
         self.is_causal = True
         self.tok_embedding = nn.Embedding(vocab_size, d_model)
-        self.pos_embedding = nn.Embedding(block_size, d_model)
-        self.blocks = nn.ModuleList([Block(d_model, hidden_size, block_size, head_num, dropout_rate, is_causal=self.is_causal) for _ in range(layer_num)])
+        self.pos_emb_method = pos_emb_method
+        print(f"Using {pos_emb_method} position embedding...")
+        if self.pos_emb_method == 'abs':
+            self.pos_embedding = nn.Embedding(block_size, d_model)
+        elif self.pos_emb_method == 'sin':
+            self.pos_embedding = SinusoidalPosisition(d_model, dropout_rate)
+        self.blocks = nn.ModuleList([Block(d_model, hidden_size, block_size, head_num, dropout_rate, is_causal=self.is_causal, is_moe=is_moe) for _ in range(layer_num)])
 
         self.ln_f = LayerNorm(d_model)
         self.lm_head = nn.Linear(d_model, vocab_size)
@@ -170,8 +289,15 @@ class Decoder(nn.Module):
         batch_size, seq_len = input_ids.shape
 
         tok_emb = self.tok_embedding(input_ids)
-        pos_emb = self.pos_embedding(torch.arange(seq_len))
-        x = tok_emb + pos_emb
+        if self.pos_emb_method == 'abs':
+            pos_emb = self.pos_embedding(torch.arange(seq_len).to(input_ids.device))
+            x = tok_emb + pos_emb
+        elif self.pos_emb_method == 'sin':
+            x = self.pos_embedding(tok_emb)
+        elif self.pos_emb_method == 'rope':
+            pass
+        else:
+            raise ValueError(f"Unexpected pos_emb_method {self.pos_emb_method}")
         
         attn_maps = []
         for block in self.blocks:
@@ -193,9 +319,9 @@ class Decoder(nn.Module):
 
 
 class EncoderForSpeechCLS(nn.Module):
-    def __init__(self, label_num, vocab_size, d_model, hidden_size, block_size, head_num, layer_num, dropout_rate, method='avg'):
+    def __init__(self, label_num, vocab_size, d_model, hidden_size, block_size, head_num, layer_num, dropout_rate, method='avg', pos_emb_method='abs', is_moe=False):
         super().__init__()
-        self.encoder = Encoder(vocab_size, d_model, hidden_size, block_size, head_num, layer_num, dropout_rate)
+        self.encoder = Encoder(vocab_size, d_model, hidden_size, block_size, head_num, layer_num, dropout_rate, pos_emb_method, is_moe=is_moe)
         self.linear = nn.Linear(d_model, label_num)
         self.method = method
     

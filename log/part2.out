@@ -1,0 +1,17 @@
+Random seed set as 42
+Loading data and creating tokenizer ...
+Vocabulary size:  5755
+Sanity Check ...
+Using abs position embedding...
+Input sentence:  It is costly and politically difficult to continue this conflict.
+Input tensor shape:  torch.Size([1, 32])
+Number of attention maps:  8
+Total number of parameters: 862859
+
+Training LM ...
+Using abs position embedding...
+Step: 100, running_loss: 6.9094, Perplexity: {'Train': 565.0353, 'wbush': 796.0878, 'hbush': 728.0514, 'obama': 691.7035}
+Step: 200, running_loss: 3.1243, Perplexity: {'Train': 420.1398, 'wbush': 660.3432, 'hbush': 582.3639, 'obama': 559.1207}
+Step: 300, running_loss: 1.9708, Perplexity: {'Train': 305.8245, 'wbush': 545.1152, 'hbush': 485.9412, 'obama': 459.6924}
+Step: 400, running_loss: 1.4034, Perplexity: {'Train': 236.8041, 'wbush': 489.477, 'hbush': 431.3121, 'obama': 404.4255}
+Step: 500, running_loss: 1.0758, Perplexity: {'Train': 190.8817, 'wbush': 456.7222, 'hbush': 396.0591, 'obama': 365.2978}
